@@ -2,7 +2,7 @@ const passsangers = [
     'Andi Travel', 7, 'Senin',
     'Budi Travel', 4, 'Selasa',
     'Cindi Travel', 1, 'Rabu',
-    'Andi Travel', 10, 'Kamis'
+    'Andi Travel', 10, 'Kamis',
 ]
 
 const tickets = [
@@ -39,10 +39,56 @@ const tickets = [
 
 const travelsGetReward = ['Cindi Travel', 'Andi Travel']
 
-function generateTravel (pasangersParam) {
+function generateTravel (passangersParam) {
+    //this 'generatedPassangers' would be the expected output of array object
+    let generatedPassangers = []
+    let generateObjData = {
+            travelAgent: '',
+            sumOfPassangers: 0,
+            day: ''
+        }
+    let counter = 0
+    let generateObjDataHelper   = []
 
+    for (let i = 0; i < passangersParam.length; i ++) {
+        let perData = passangersParam[i]
+        
+        if (counter === 3) {
+
+            generateObjData.travelAgent = generateObjDataHelper[0]
+            generateObjData.sumOfPassangers = generateObjDataHelper[1]
+            generateObjData.day = generateObjDataHelper[2]
+            
+            generatedPassangers.push(generateObjData)
+
+            generateObjData = {
+                travelAgent: '',
+                sumOfPassangers: 0,
+                day: ''
+            }
+
+            counter = 0
+            generateObjDataHelper = []
+            generateObjDataHelper.push(perData)
+
+        } else if (i === passangersParam.length -1) {
+            generateObjDataHelper.push(perData)
+            generateObjData.travelAgent = generateObjDataHelper[0]
+            generateObjData.sumOfPassangers = generateObjDataHelper[1]
+            generateObjData.day = generateObjDataHelper[2]
+            
+            generatedPassangers.push(generateObjData)
+
+        } else {
+            generateObjDataHelper.push(perData)
+        }
+        counter++
+    }
+    // console.log(generatedPassangers)
 }
-/*
+generateTravel(passsangers)
+
+/*Expected Output
     [   
         {
             travelAgent: 'Andi Travel'
@@ -59,7 +105,7 @@ function getTicket (generatedPassangers, ticketsParam) {
     //total price get fro multiple passangers with ticket price 
 
 }
-/*
+/* expected output
     [   
         {
             travelAgent: 'Andi Travel'
@@ -78,7 +124,7 @@ function getReward (travelsGetRewardParam, travelsData) {
 
 }
 
-/*
+/* expected output
     [   
         {
             travelAgent: 'Andi Travel'
