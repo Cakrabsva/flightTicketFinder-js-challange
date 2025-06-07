@@ -118,7 +118,7 @@ function getTicket (generatedPassangers, ticketsParam) {
             if (travelAgentData.day === ticketsDetail.flight) {
                 let totalPrice = travelAgentData.sumOfPassangers * ticketsDetail.price
 
-                travelAgentData.totalprice = totalPrice
+                travelAgentData.totalPrice = totalPrice
             }
         }
         
@@ -127,7 +127,7 @@ function getTicket (generatedPassangers, ticketsParam) {
     return travelsData    
 }
 // getTicket(generateTravel(passsangers), tickets)
-console.log(getTicket(passsangers, tickets))
+// console.log(getTicket(passsangers, tickets))
 /* expected output
     [   
         {
@@ -144,9 +144,97 @@ console.log(getTicket(passsangers, tickets))
 
 function getReward (travelsGetRewardParam, travelsData) {
     // if total price more than 2 mio and total passanger more than 15 then travel worth to get 20% cash back from total price
+    let travels = getTicket(passsangers, travelsData)
+    let filteredData = []
+    let dataSummary = []
+    let detaiDataObj = {
+        travelAgent: '',
+        flight: [],
+        totalPrice: 0,
+        totalPassangers: 0,
+        deleted: true
+    } 
+    
+    for (let i = 0; i < travels.length; i ++) {
+        let travelDetail = travels[i]
+         
+        if(dataSummary.length === 0) {
+            detaiDataObj.travelAgent = travelDetail.travelAgent
+            detaiDataObj.flight.push(travelDetail.day)
+            detaiDataObj.totalPrice = travelDetail.totalPrice
+            detaiDataObj.totalPassangers = travelDetail.sumOfPassangers
+            detaiDataObj.deleted = false
+            
+            dataSummary.push(detaiDataObj)
+            detaiDataObj = {
+                travelAgent: '',
+                flight: [],
+                totalPrice: 0,
+                totalPassangers: 0,
+                deleted: false
+                
+            } 
 
+        } else {
+            let flag = false
+            for (let i = 0; i < dataSummary.length; i ++) {
+                let dataInSummary = dataSummary[i]
 
+                if(travelDetail.travelAgent === dataInSummary.travelAgent) {
+                    dataInSummary.flight.push(travelDetail.day)
+                    dataInSummary.totalPassangers += travelDetail.sumOfPassangers
+                    dataInSummary.totalPrice += travelDetail.totalPrice
+                    flag = true
+                }
+            }
+
+            if(!flag) {
+                detaiDataObj.travelAgent = travelDetail.travelAgent
+                detaiDataObj.flight.push(travelDetail.day)
+                detaiDataObj.totalPrice = travelDetail.totalPrice
+                detaiDataObj.totalPassangers = travelDetail.sumOfPassangers
+                detaiDataObj.deleted = false
+                dataSummary.push(detaiDataObj)
+                detaiDataObj = {
+                    travelAgent: '',
+                    flight: [],
+                    totalPrice: 0,
+                    totalPassangers: 0,
+                    deleted: false
+                }
+            }
+        }
+    }
+
+    for (let i = 0; i < dataSummary.length; i ++) {
+        let dataInSummary = dataSummary[i]
+        let flag = false
+
+        for (let j = 0; j < travelsGetRewardParam.length; j ++) {
+            let dataInTravelsGetParam = travelsGetRewardParam[j]
+        
+            if (dataInSummary.travelAgent === dataInTravelsGetParam) {
+                flag= true
+                
+                if (dataInSummary.totalPassangers >= 15 && dataInSummary.totalPrice > 2000000) {
+                    dataInSummary.reward = dataInSummary.totalPrice * 0.2
+                } else {
+                    dataInSummary.reward = 0
+                }
+            }
+        }
+        if (!flag) {
+            dataInSummary.deleted = true
+        }
+
+        if (!dataInSummary.deleted) {
+           filteredData.push(dataInSummary) 
+        }
+    }
+
+    return filteredData
 }
+console.log(getReward(travelsGetReward, tickets))
 
 /* expected output
     [   
