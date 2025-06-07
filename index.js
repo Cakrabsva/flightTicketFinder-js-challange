@@ -85,8 +85,9 @@ function generateTravel (passangersParam) {
         counter++
     }
     // console.log(generatedPassangers)
+    return generatedPassangers
 }
-generateTravel(passsangers)
+// generateTravel(passsangers)
 
 /*Expected Output
     [   
@@ -102,9 +103,31 @@ generateTravel(passsangers)
 */
 
 function getTicket (generatedPassangers, ticketsParam) {
-    //total price get fro multiple passangers with ticket price 
+    //total price get from multiple passangers with ticket pric
+    let travelsData = generateTravel(generatedPassangers)
+    
+    // console.log(travelsData)
 
+    for (let i = 0; i < travelsData.length; i ++) {
+        let travelAgentData = travelsData[i]
+        // console.log(travelAgentData)
+
+        for (let j = 0; j < ticketsParam.length; j ++) {
+            let ticketsDetail = ticketsParam[i]
+
+            if (travelAgentData.day === ticketsDetail.flight) {
+                let totalPrice = travelAgentData.sumOfPassangers * ticketsDetail.price
+
+                travelAgentData.totalprice = totalPrice
+            }
+        }
+        
+    }
+    
+    return travelsData    
 }
+// getTicket(generateTravel(passsangers), tickets)
+console.log(getTicket(passsangers, tickets))
 /* expected output
     [   
         {
@@ -121,6 +144,7 @@ function getTicket (generatedPassangers, ticketsParam) {
 
 function getReward (travelsGetRewardParam, travelsData) {
     // if total price more than 2 mio and total passanger more than 15 then travel worth to get 20% cash back from total price
+
 
 }
 
